@@ -1,8 +1,10 @@
 # Flowboard — Kanban Task Management
 
+### 🔗 [Live Demo — flowboard-mkasik.vercel.app](https://flowboard-mkasik.vercel.app)
+
 A kanban-style productivity app with drag-and-drop boards, team collaboration, deadline tracking, and email notifications — React + TypeScript on the frontend, Express + MongoDB on the backend.
 
-**Live demo:** [flowboard-mkasik.vercel.app](https://flowboard-mkasik.vercel.app) — click "Log in as Demo User" or "Log in as Admin" on the sign-in screen (or use `demo@flowboard.app` / `DemoPass123` and `admin@flowboard.app` / `AdminPass123` directly) to explore a pre-populated board without registering.
+No registration needed to look around — the landing page has one-click **"Log in as User"** / **"Log in as Admin"** buttons that drop you straight into a dashboard pre-populated with real-looking projects and tasks. (Same accounts, manually: `demo@flowboard.app` / `DemoPass123` and `admin@flowboard.app` / `AdminPass123`.)
 
 ## Features
 
