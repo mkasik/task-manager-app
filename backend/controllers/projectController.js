@@ -43,16 +43,22 @@ async function createProject(req, res) {
 }
 
 async function getProject(req, res) {
-    const project = await Project.findById(req.params.id)
-        .populate('members.user', 'name email avatarColor')
-        .populate('owner', 'name email avatarColor');
-
-    if (!project) {
+    // Check membership on the raw (unpopulated) document first — isMember() compares
+    // m.user.toString() against the requester's id, which only matches a plain
+    // ObjectId. Populating members.user beforehand turns m.user into a full User
+    // document, so the comparison would silently fail for every real member too.
+    const raw = await Project.findById(req.params.id);
+    if (!raw) {
         return res.status(404).json({ success: false, message: 'Project not found.' });
     }
-    if (!isMember(project, req.user._id)) {
+    if (!isMember(raw, req.user._id)) {
         return res.status(403).json({ success: false, message: 'You are not a member of this project.' });
     }
+
+    const project = await raw.populate([
+        { path: 'members.user', select: 'name email avatarColor' },
+        { path: 'owner', select: 'name email avatarColor' },
+    ]);
 
     res.json({ success: true, data: project });
 }

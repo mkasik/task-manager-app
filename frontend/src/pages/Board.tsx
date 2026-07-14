@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type DragEvent } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Users, Plus } from 'lucide-react';
+import axios from 'axios';
 import api from '../api/client';
 import type { ApiResponse, Project, Task } from '../types';
 import Column from '../components/Column';
@@ -13,6 +14,7 @@ export default function Board() {
     const [project, setProject] = useState<Project | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState('');
 
     const [taskModal, setTaskModal] = useState<{ task: Task | null; columnId: string } | null>(null);
     const [memberModalOpen, setMemberModalOpen] = useState(false);
@@ -26,21 +28,37 @@ export default function Board() {
     const loadBoard = useCallback(async () => {
         if (!id) return;
         setLoading(true);
-        const [projectRes, tasksRes] = await Promise.all([
-            api.get<ApiResponse<Project>>(`/projects/${id}`),
-            api.get<ApiResponse<Task[]>>(`/projects/${id}/tasks`),
-        ]);
-        setProject(projectRes.data.data);
-        setTasks(tasksRes.data.data);
-        setLoading(false);
+        setLoadError('');
+        try {
+            const [projectRes, tasksRes] = await Promise.all([
+                api.get<ApiResponse<Project>>(`/projects/${id}`),
+                api.get<ApiResponse<Task[]>>(`/projects/${id}/tasks`),
+            ]);
+            setProject(projectRes.data.data);
+            setTasks(tasksRes.data.data);
+        } catch (err) {
+            const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+            setLoadError(message || 'Could not load this board.');
+        } finally {
+            setLoading(false);
+        }
     }, [id]);
 
     useEffect(() => {
         loadBoard();
     }, [loadBoard]);
 
-    if (loading || !project) {
+    if (loading) {
         return <div className="p-8 text-center text-slate-400">Loading board…</div>;
+    }
+
+    if (loadError || !project) {
+        return (
+            <div className="p-8 text-center">
+                <p className="text-red-500 font-semibold">{loadError || 'Board not found.'}</p>
+                <Link to="/" className="text-brand-600 font-semibold text-sm mt-3 inline-block">&larr; Back to Projects</Link>
+            </div>
+        );
     }
 
     const sortedColumns = [...project.columns].sort((a, b) => a.order - b.order);
