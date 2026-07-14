@@ -1,8 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { KanbanSquare } from 'lucide-react';
+import { KanbanSquare, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+
+const DEMO_ACCOUNTS = [
+    { label: 'Demo User', email: 'demo@flowboard.app', password: 'DemoPass123' },
+    { label: 'Admin', email: 'admin@flowboard.app', password: 'AdminPass123' },
+];
 
 export default function Login() {
     const { login } = useAuth();
@@ -12,12 +17,11 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    async function handleSubmit(e: FormEvent) {
-        e.preventDefault();
+    async function doLogin(loginEmail: string, loginPassword: string) {
         setError('');
         setLoading(true);
         try {
-            await login(email, password);
+            await login(loginEmail, loginPassword);
             navigate('/');
         } catch (err) {
             const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
@@ -25,6 +29,11 @@ export default function Login() {
         } finally {
             setLoading(false);
         }
+    }
+
+    async function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        doLogin(email, password);
     }
 
     return (
@@ -36,6 +45,25 @@ export default function Login() {
                     </div>
                     <h1 className="text-xl font-extrabold text-slate-900 mt-3">Flowboard</h1>
                     <p className="text-sm text-slate-500 mt-1">Kanban boards for teams that ship</p>
+                </div>
+
+                <div className="card p-4 mb-4 bg-brand-50/60 border-brand-100">
+                    <p className="text-xs font-bold text-brand-700 flex items-center gap-1.5 mb-2">
+                        <Sparkles size={13} /> Just browsing? Try a demo account
+                    </p>
+                    <div className="flex gap-2">
+                        {DEMO_ACCOUNTS.map((acc) => (
+                            <button
+                                key={acc.email}
+                                type="button"
+                                disabled={loading}
+                                onClick={() => doLogin(acc.email, acc.password)}
+                                className="flex-1 text-xs font-semibold bg-white border border-brand-200 text-brand-700 rounded-lg py-2 hover:bg-brand-100 transition disabled:opacity-50"
+                            >
+                                Log in as {acc.label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="card p-6 space-y-4">

@@ -2,6 +2,8 @@
 
 A kanban-style productivity app with drag-and-drop boards, team collaboration, deadline tracking, and email notifications — React + TypeScript on the frontend, Express + MongoDB on the backend.
 
+**Live demo:** [flowboard-mkasik.vercel.app](https://flowboard-mkasik.vercel.app) — click "Log in as Demo User" or "Log in as Admin" on the sign-in screen (or use `demo@flowboard.app` / `DemoPass123` and `admin@flowboard.app` / `AdminPass123` directly) to explore a pre-populated board without registering.
+
 ## Features
 
 - **Drag-and-drop kanban boards** — native HTML5 drag-and-drop (no external DnD library), with precise before/after card positioning as you drag, persisted to the backend on drop
@@ -95,3 +97,11 @@ Deploy. The API will be live at `https://<backend-project>.vercel.app/api/*`. Th
 | `VITE_API_URL` | `https://<backend-project>.vercel.app/api` |
 
 Deploy, then go back to the backend project's env vars and set `CLIENT_URL` to this frontend URL (needed for CORS), and redeploy the backend once more.
+
+### Gotcha: Vercel Deployment Protection
+
+New Vercel projects can default to protecting **every** `*.vercel.app` URL — including your own custom aliases — behind a Vercel login wall (`ssoProtection: { deploymentType: "all_except_custom_domains" }`). Since this API and frontend are meant to be publicly reachable (not just by you), turn this off for both projects: **Project Settings → Deployment Protection → Vercel Authentication → Disabled**. If it's left on, requests to the API return a `302` redirect to `vercel.com/sso-api` instead of your JSON response.
+
+### Seeding demo data
+
+`backend/utils/seedDemo.js` creates two demo accounts (`demo@flowboard.app` / `DemoPass123` and `admin@flowboard.app` / `AdminPass123`) plus a couple of realistic projects and tasks, so the live demo isn't empty. Run it locally against your `MONGO_URI` with `node utils/seedDemo.js`, or — if your machine's DNS can't resolve `mongodb+srv://` SRV records but your Vercel deployment can — temporarily add a POST route in `app.js` that calls `seedDemo()` behind a secret check, hit it once from the deployed URL, then remove the route again. It's safe to re-run; it clears out any previously-seeded demo projects first.
