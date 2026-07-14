@@ -19,7 +19,7 @@ export default function Layout() {
         <div className="min-h-screen flex flex-col">
             <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2 font-extrabold text-lg text-slate-900">
+                    <Link to="/dashboard" className="flex items-center gap-2 font-extrabold text-lg text-slate-900">
                         <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center">
                             <KanbanSquare size={16} />
                         </span>

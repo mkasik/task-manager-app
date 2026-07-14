@@ -56,7 +56,7 @@ export default function Board() {
         return (
             <div className="p-8 text-center">
                 <p className="text-red-500 font-semibold">{loadError || 'Board not found.'}</p>
-                <Link to="/" className="text-brand-600 font-semibold text-sm mt-3 inline-block">&larr; Back to Projects</Link>
+                <Link to="/dashboard" className="text-brand-600 font-semibold text-sm mt-3 inline-block">&larr; Back to Projects</Link>
             </div>
         );
     }
@@ -137,7 +137,7 @@ export default function Board() {
         <div className="h-[calc(100vh-64px)] flex flex-col">
             <div className="px-4 sm:px-6 py-4 flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 bg-white">
                 <div className="min-w-0">
-                    <Link to="/" className="text-xs text-brand-600 font-semibold flex items-center gap-1 mb-1"><ArrowLeft size={12} /> All Projects</Link>
+                    <Link to="/dashboard" className="text-xs text-brand-600 font-semibold flex items-center gap-1 mb-1"><ArrowLeft size={12} /> All Projects</Link>
                     <h1 className="text-lg font-extrabold text-slate-900 truncate">{project.name}</h1>
                 </div>
                 <button onClick={() => setMemberModalOpen(true)} className="btn-outline">

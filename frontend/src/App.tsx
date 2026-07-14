@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Projects from './pages/Projects';
@@ -10,6 +11,7 @@ import NotFound from './pages/NotFound';
 export default function App() {
     return (
         <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
@@ -20,7 +22,7 @@ export default function App() {
                     </ProtectedRoute>
                 }
             >
-                <Route path="/" element={<Projects />} />
+                <Route path="/dashboard" element={<Projects />} />
                 <Route path="/projects/:id" element={<Board />} />
             </Route>
 

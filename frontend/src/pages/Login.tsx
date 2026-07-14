@@ -22,7 +22,7 @@ export default function Login() {
         setLoading(true);
         try {
             await login(loginEmail, loginPassword);
-            navigate('/');
+            navigate('/dashboard');
         } catch (err) {
             const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
             setError(message || 'Login failed.');
